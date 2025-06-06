@@ -1,0 +1,2324 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EastForge 東洋符篆 - AI最適化護符</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Orbitron:wght@700;800&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #B91C1C;
+            --secondary: #F59E0B;
+            --accent: #7C3AED;
+            --gold: #FFD700;
+            --mystic-purple: #6B46C1;
+            --cosmic-blue: #3B82F6;
+            --ancient-bronze: #CD7F32;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(185, 28, 28, 0.1) 0%, transparent 30%),
+                radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.1) 0%, transparent 30%);
+        }
+        
+        .logo-font {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 2.5rem;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            display: inline-block;
+            text-shadow: 0 0 20px rgba(185, 28, 28, 0.4);
+        }
+        
+        .logo-sub {
+            font-family: 'Noto Sans JP', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            color: var(--secondary);
+            margin-top: -5px;
+            text-align: center;
+            opacity: 0.9;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .mystic-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+        }
+        
+        .card {
+            background-color: rgba(26, 32, 44, 0.7);
+            border: 1px solid rgba(185, 28, 28, 0.2);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            transition: all 0.4s ease;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(185, 28, 28, 0.3);
+            border-color: rgba(185, 28, 28, 0.5);
+        }
+        
+        .navbar {
+            background-color: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(185, 28, 28, 0.2);
+            transition: all 0.3s ease;
+            height: 80px;
+            z-index: 1000;
+        }
+        
+        .navbar.scrolled {
+            background-color: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            height: 70px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            transition: all 0.3s ease;
+            border: none;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(185, 28, 28, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(185, 28, 28, 0.1);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(185, 28, 28, 0.3);
+        }
+        
+        .hero {
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 100px;
+        }
+        
+        .hero:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.8) 100%);
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.4;
+            z-index: 0;
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(185, 28, 28, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-icon:hover {
+            transform: scale(1.1);
+        }
+        
+        .stats-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
+            font-family: 'Noto Sans JP', sans-serif;
+            font-weight: 700;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .section-title.center:after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .talisman-showcase {
+            background: linear-gradient(135deg, rgba(185, 28, 28, 0.05), rgba(245, 158, 11, 0.05));
+            border-radius: 25px;
+            padding: 40px;
+            margin: 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .talisman-showcase:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .cultural-symbol {
+            position: absolute;
+            font-size: 3rem;
+            opacity: 0.5;
+            color: var(--secondary);
+            text-shadow: 0 0 12px rgba(245, 158, 11, 0.7), 0 0 25px rgba(185, 28, 28, 0.3);
+            animation: symbolFloat 15s infinite linear;
+            z-index: 1;
+            font-weight: bold;
+            pointer-events: none;
+        }
+        
+        @keyframes symbolFloat {
+            0% { 
+                transform: translateY(100vh) rotate(0deg); 
+                opacity: 0.25;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% { 
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .talisman-card {
+            background: rgba(26, 32, 44, 0.8);
+            border: 2px solid rgba(185, 28, 28, 0.3);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .talisman-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--secondary);
+            box-shadow: 0 25px 50px rgba(245, 158, 11, 0.3);
+        }
+        
+        .talisman-image {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid var(--gold);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .culture-section {
+            background: linear-gradient(135deg, rgba(26, 32, 44, 0.9), rgba(0, 0, 0, 0.7));
+            border-radius: 25px;
+            padding: 60px 40px;
+            margin: 60px 0;
+            position: relative;
+            border: 1px solid rgba(185, 28, 28, 0.2);
+        }
+        
+        .advantage-card {
+            background: rgba(26, 32, 44, 0.6);
+            border: 1px solid rgba(185, 28, 28, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s ease;
+            position: relative;
+            height: 100%;
+        }
+        
+        .advantage-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(185, 28, 28, 0.25);
+        }
+        
+        .urgency-banner {
+            background: linear-gradient(90deg, #b91c1c, #d97706, #b91c1c);
+            background-size: 200% 100%;
+            animation: gradientFlow 3s linear infinite;
+        }
+        
+        @keyframes gradientFlow {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
+        }
+        
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+        
+        .testimonial-card:hover {
+            box-shadow: 0 15px 35px rgba(185, 28, 28, 0.4);
+        }
+        
+        /* Login Modal */
+        .login-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-content {
+            background: rgba(26, 32, 44, 0.95);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            position: relative;
+            border: 2px solid var(--secondary);
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--secondary);
+        }
+        
+        .social-login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .social-login-btn:hover {
+            transform: translateY(-3px);
+        }
+        
+        .crypto-wallet {
+            background: #1a1a1a;
+            border: 1px solid #444;
+        }
+        
+        .crypto-wallet:hover {
+            background: #222;
+        }
+        
+        /* Chat Simulation */
+        .chat-container {
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px 0;
+            border: 1px solid rgba(185, 28, 28, 0.2);
+        }
+        
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            background: rgba(10, 10, 10, 0.5);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .message {
+            padding: 12px 18px;
+            border-radius: 18px;
+            max-width: 80%;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+            word-wrap: break-word;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .bot-message {
+            background: rgba(185, 28, 28, 0.3);
+            border: 1px solid rgba(185, 28, 28, 0.5);
+            align-self: flex-start;
+            margin-right: auto;
+        }
+        
+        .user-message {
+            background: rgba(245, 158, 11, 0.3);
+            border: 1px solid rgba(245, 158, 11, 0.5);
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 30px;
+            background: rgba(10, 10, 10, 0.5);
+            border: 1px solid rgba(185, 28, 28, 0.3);
+            color: white;
+        }
+        
+        .chat-input button {
+            padding: 12px 25px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .language-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+        
+        .language-btn {
+            background: rgba(26, 32, 44, 0.7);
+            border: 1px solid rgba(185, 28, 28, 0.3);
+            color: var(--secondary);
+            padding: 8px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 280px;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            padding: 80px 20px 20px;
+            overflow-y: auto;
+        }
+        
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+        
+        .mobile-menu a {
+            display: block;
+            padding: 15px;
+            border-bottom: 1px solid rgba(185, 28, 28, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .mobile-menu a:hover {
+            color: var(--secondary);
+            background: rgba(185, 28, 28, 0.1);
+        }
+        
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .filter-btn {
+            padding: 8px 20px;
+            border-radius: 30px;
+            background: rgba(26, 32, 44, 0.7);
+            border: 1px solid rgba(185, 28, 28, 0.3);
+            color: var(--secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn.active, .filter-btn:hover {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero-content {
+                padding-top: 20px;
+            }
+            
+            .stats-number {
+                font-size: 2.2rem;
+            }
+            
+            .talisman-image {
+                width: 160px;
+                height: 160px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .logo-font {
+                font-size: 1.8rem;
+            }
+            
+            .logo-sub {
+                font-size: 0.7rem;
+            }
+            
+            .cultural-symbol {
+                font-size: 1.5rem;
+                opacity: 0.25;
+            }
+            
+            .talisman-image {
+                width: 130px;
+                height: 130px;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+                line-height: 1.2;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .btn-primary, .btn-secondary {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .desktop-nav {
+                display: none;
+            }
+            
+            .hamburger {
+                display: block;
+            }
+            
+            .hero {
+                padding-top: 120px;
+            }
+            
+            .navbar {
+                height: 70px;
+            }
+            
+            .navbar.scrolled {
+                height: 60px;
+            }
+            
+            .chat-container {
+                padding: 20px;
+            }
+            
+            .chat-messages {
+                height: 300px;
+            }
+            
+            .talisman-showcase {
+                padding: 20px;
+            }
+            
+            .culture-section {
+                padding: 40px 20px;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .language-selector {
+                top: 15px;
+                right: 15px;
+            }
+            
+            .language-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .stats-number {
+                font-size: 1.8rem;
+            }
+            
+            .hero {
+                padding-top: 90px;
+            }
+            
+            .mobile-menu {
+                width: 100%;
+            }
+            
+            .talisman-image {
+                width: 110px;
+                height: 110px;
+            }
+
+            .language-selector {
+                top: 12px;
+                right: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cultural symbols background -->
+    <div class="cultural-symbol" style="left: 5%; animation-delay: 0s;">☰</div>
+    <div class="cultural-symbol" style="left: 15%; animation-delay: 2s;">☱</div>
+    <div class="cultural-symbol" style="left: 25%; animation-delay: 4s;">☲</div>
+    <div class="cultural-symbol" style="left: 35%; animation-delay: 6s;">☳</div>
+    <div class="cultural-symbol" style="left: 45%; animation-delay: 8s;">☴</div>
+    <div class="cultural-symbol" style="left: 55%; animation-delay: 10s;">☵</div>
+    <div class="cultural-symbol" style="left: 65%; animation-delay: 12s;">☶</div>
+    <div class="cultural-symbol" style="left: 75%; animation-delay: 14s;">☷</div>
+    <div class="cultural-symbol" style="left: 85%; animation-delay: 16s;">金</div>
+    <div class="cultural-symbol" style="left: 95%; animation-delay: 18s;">木</div>
+    <div class="cultural-symbol" style="left: 7%; animation-delay: 20s;">水</div>
+    <div class="cultural-symbol" style="left: 17%; animation-delay: 22s;">火</div>
+    <div class="cultural-symbol" style="left: 27%; animation-delay: 24s;">土</div>
+    <div class="cultural-symbol" style="left: 37%; animation-delay: 26s;">龍</div>
+    <div class="cultural-symbol" style="left: 47%; animation-delay: 28s;">鳳</div>
+    <div class="cultural-symbol" style="left: 57%; animation-delay: 30s;">☯</div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar fixed w-full z-50 px-4 py-3">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="logo-font">EastForge</div>
+                <div class="logo-sub ml-3">東洋符篆</div>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <div class="hidden lg:flex space-x-8 desktop-nav">
+                <a href="#system" class="hover:text-red-400 transition font-medium">AIシステム</a>
+                <a href="#culture" class="hover:text-red-400 transition font-medium">符篆文化</a>
+                <a href="#talismans" class="hover:text-red-400 transition font-medium">商品シリーズ</a>
+                <a href="#advantages" class="hover:text-red-400 transition font-medium">核心的優位性</a>
+                <a href="#testimonials" class="hover:text-red-400 transition font-medium">お客様の声</a>
+            </div>
+            
+            <!-- Desktop Right -->
+            <div class="hidden lg:flex items-center space-x-4 desktop-nav">
+                <!-- Language Selector -->
+                <div class="language-btn">
+                    <i class="fas fa-globe"></i>
+                    <span>日本語</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                
+                <button id="loginBtn" class="btn-secondary px-6 py-2 rounded-full text-sm">ログイン</button>
+                <button class="btn-primary px-6 py-2 rounded-full text-sm">無料相談</button>
+            </div>
+            
+            <!-- Mobile Button -->
+            <div class="flex lg:hidden items-center">
+                <div class="language-btn mr-4">
+                    <i class="fas fa-globe"></i>
+                    <span>日本語</span>
+                </div>
+                <button id="mobileMenuBtn" class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#system">AIシステム</a>
+        <a href="#culture">符篆文化</a>
+        <a href="#talismans">商品シリーズ</a>
+        <a href="#advantages">核心的優位性</a>
+        <a href="#testimonials">お客様の声</a>
+        <a href="#" id="mobileLoginBtn">ログイン</a>
+        <a href="#">無料相談</a>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-content">
+            <span class="close-btn" id="closeLogin">&times;</span>
+            <h2 class="text-2xl font-bold mb-6 text-center gradient-text">EastForgeへログイン</h2>
+            
+            <div class="mb-6">
+                <h3 class="font-bold mb-4 text-center">ソーシャルログイン</h3>
+                <button class="social-login-btn bg-blue-600 text-white">
+                    <i class="fab fa-facebook mr-3"></i> Facebookでログイン
+                </button>
+                <button class="social-login-btn bg-white text-gray-800">
+                    <i class="fab fa-google mr-3"></i> Googleでログイン
+                </button>
+                <button class="social-login-btn bg-black text-white">
+                    <i class="fab fa-apple mr-3"></i> Appleでログイン
+                </button>
+                <button class="social-login-btn bg-blue-400 text-white">
+                    <i class="fab fa-twitter mr-3"></i> Twitterでログイン
+                </button>
+            </div>
+            
+            <div>
+                <h3 class="font-bold mb-4 text-center">暗号通貨ウォレット</h3>
+                <button class="social-login-btn crypto-wallet">
+                    <i class="fab fa-ethereum mr-3 text-purple-400"></i> MetaMask
+                </button>
+                <button class="social-login-btn crypto-wallet">
+                    <i class="fab fa-bitcoin mr-3 text-orange-400"></i> Bitcoinウォレット
+                </button>
+                <button class="social-login-btn crypto-wallet">
+                    <i class="fas fa-wallet mr-3 text-blue-400"></i> WalletConnect
+                </button>
+            </div>
+            
+            <p class="text-center text-gray-400 mt-6 text-sm">
+                ログインすることで、利用規約とプライバシーポリシーに同意したものとみなされます
+            </p>
+        </div>
+    </div>
+
+    <!-- Main Hero Section -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="container mx-auto px-4 hero-content">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+                        東洋の叡智と<br>
+                        <span class="gradient-text">現代革新の融合</span><br>
+                        五千年の神秘とAI知能の完全な収束
+                    </h1>
+                    <p class="text-xl text-gray-300 mb-8 leading-relaxed">
+                        永遠の東洋の叡智と最先端テクノロジーの革命的融合を体験してください。AIの賢者「ワン師」が量子レベルの精度で250万以上の素材組み合わせを分析し、あなた専用の開運ソリューションを創造します。
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-12">
+                        <button class="btn-primary px-8 py-4 rounded-full text-lg font-semibold">
+                            <i class="fas fa-magic mr-2"></i>
+                            相談開始
+                        </button>
+                        <button class="btn-secondary px-8 py-4 rounded-full text-lg font-semibold">
+                            <i class="fas fa-play mr-2"></i>
+                            デモ視聴
+                        </button>
+                    </div>
+                    
+                    <!-- Statistics -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div class="text-center">
+                            <div class="stats-number">250万+</div>
+                            <div class="text-sm text-gray-400">素材組み合わせ</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="stats-number">500+</div>
+                            <div class="text-sm text-gray-400">伝統素材</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="stats-number">97%</div>
+                            <div class="text-sm text-gray-400">効果精度</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="stats-number">5000</div>
+                            <div class="text-sm text-gray-400">年の叡智継承</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Featured Talisman Preview -->
+                <div class="relative">
+                    <div class="card p-8 text-center">
+                        <h3 class="text-2xl font-bold mb-6 gradient-text">おすすめ符篆</h3>
+                        <div class="talisman-image">
+                            <div class="absolute inset-0 bg-gradient-to-br from-red-600 via-yellow-600 to-red-800 opacity-80"></div>
+                            <div class="relative z-10">
+                                <div class="text-6xl text-yellow-300 mb-2">財</div>
+                                <div class="absolute top-1/4 left-1/4 text-2xl text-red-300">五</div>
+                                <div class="absolute bottom-1/4 right-1/4 text-2xl text-yellow-300">路</div>
+                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-3xl text-orange-200">☰</div>
+                            </div>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">五路財神符篆</h4>
+                        <p class="text-gray-400 mb-4">AI最適化、財運と事業成功を専門に設計</p>
+                        <div class="flex justify-center space-x-2">
+                            <span class="px-3 py-1 bg-red-900 text-red-300 rounded-full text-sm">プレミアム版</span>
+                            <span class="px-3 py-1 bg-yellow-900 text-yellow-300 rounded-full text-sm">金粉素材</span>
+                        </div>
+                        <div class="mt-4">
+                            <span class="text-yellow-400 font-bold">¥799</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Limited Time Offer Banner -->
+    <div class="urgency-banner py-4 text-center">
+        <div class="container mx-auto flex flex-col md:flex-row justify-center items-center">
+            <span class="text-white font-bold text-lg md:text-xl mb-2 md:mb-0 md:mr-4">
+                <i class="fas fa-bolt mr-2"></i>期間限定：先着100名様15%オフ + 無料開光儀式
+            </span>
+            <button class="btn-primary px-6 py-2 rounded-full text-sm font-semibold">
+                今すぐ受け取る <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- AI Consultation Simulation -->
+    <section class="py-20">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 section-title center">ワン師相談デモ</h2>
+            </div>
+            
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message bot-message">
+                        <strong>ワン師</strong><br>
+                        ようこそ！私はEastForgeのAI符篆師、ワン師です。本日はどのようなご相談でしょうか？
+                    </div>
+                    <div class="message user-message">
+                        <strong>ユーザー</strong><br>
+                        仕事運と財運をアップしたいです
+                    </div>
+                    <div class="message bot-message">
+                        <strong>ワン師</strong><br>
+                        素晴らしい選択です！事業・財運シリーズの符篆をおすすめします。生年月日をお教えいただけますか？
+                    </div>
+                    <div class="message user-message">
+                        <strong>ユーザー</strong><br>
+                        1988年6月15日午前10時30分、香港生まれです
+                    </div>
+                    <div class="message bot-message">
+                        <strong>ワン師</strong><br>
+                        ありがとうございます。命盤を分析中...あなたの五行構成は金旺土弱です。「事業加速符篆」と「五路財神符篆」の組み合わせをおすすめします。<br><br>
+                        ✓ 個人適合度：92%<br>
+                        ✓ 素材：特級朱砂 + 22K金粉<br>
+                        ✓ 制作時期：来週火曜の黎明
+                    </div>
+                    <div class="message user-message">
+                        <strong>ユーザー</strong><br>
+                        完璧ですね！次はどうすればよいですか？
+                    </div>
+                    <div class="message bot-message">
+                        <strong>ワン師</strong><br>
+                        下記の符篆を選択してカートに追加してください。各符篆の詳細をご覧になりますか？<br><br>
+                        <div class="flex flex-wrap gap-4 mt-3">
+                            <div class="bg-gray-800 rounded-lg p-3 flex-1 min-w-[120px]">
+                                <div class="text-xl font-bold text-blue-400 mb-1">事業</div>
+                                <div class="text-sm">加速符篆</div>
+                                <div class="text-yellow-400 font-bold mt-1">¥599</div>
+                            </div>
+                            <div class="bg-gray-800 rounded-lg p-3 flex-1 min-w-[120px]">
+                                <div class="text-xl font-bold text-yellow-400 mb-1">財運</div>
+                                <div class="text-sm">五路財神符篆</div>
+                                <div class="text-yellow-400 font-bold mt-1">¥799</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="メッセージを入力してください...">
+                    <button id="sendMessage">送信 <i class="fas fa-paper-plane ml-2"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Talisman Product Series -->
+    <section class="py-20" id="talismans">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 section-title center">符篆シリーズ</h2>
+                <p class="text-xl text-gray-300 max-w-4xl mx-auto">
+                    人生のあらゆる側面に対応する包括的な符篆ソリューション
+                </p>
+            </div>
+            
+            <!-- Personal Fortune Enhancement Series -->
+            <div class="talisman-showcase mb-16">
+                <h3 class="text-3xl font-bold mb-8 gradient-text text-center">個人運勢向上シリーズ（50種符篆）</h3>
+                
+                <!-- Category Filters -->
+                <div class="category-filter">
+                    <button class="filter-btn active" data-filter="all">すべて</button>
+                    <button class="filter-btn" data-filter="health">健康・活力</button>
+                    <button class="filter-btn" data-filter="protection">守護・安全</button>
+                    <button class="filter-btn" data-filter="wealth">財運・繁栄</button>
+                    <button class="filter-btn" data-filter="love">恋愛・人間関係</button>
+                    <button class="filter-btn" data-filter="academic">学業・仕事</button>
+                </div>
+                
+                <!-- Health & Vitality -->
+                <div class="mb-12 talisman-category" data-category="health">
+                    <h4 class="text-2xl font-bold mb-8 text-green-400 text-center">健康・活力（10種符篆）</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Medicine King Health Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-green-600 via-emerald-600 to-teal-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-green-300 mb-1">藥</div>
+                                    <div class="text-lg text-emerald-300">王健</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">薬王健康符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">身体健康を促進し、病気を避ける</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-green-900 text-green-300 rounded text-xs">健康</span>
+                                <span class="px-2 py-1 bg-emerald-900 text-emerald-300 rounded text-xs">活力</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥699</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Longevity Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-teal-600 via-cyan-600 to-blue-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-teal-300 mb-1">壽</div>
+                                    <div class="text-lg text-cyan-300">延年</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">長寿符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">寿命を延ばし、長期的な健康を促進</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-teal-900 text-teal-300 rounded text-xs">長寿</span>
+                                <span class="px-2 py-1 bg-cyan-900 text-cyan-300 rounded text-xs">持久力</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥799</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Vital Energy Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-yellow-600 via-orange-600 to-red-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-yellow-300 mb-1">氣</div>
+                                    <div class="text-lg text-orange-300">活力</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">生気符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">エネルギーレベルを向上し、疲労と戦う</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-yellow-900 text-yellow-300 rounded text-xs">エネルギー</span>
+                                <span class="px-2 py-1 bg-orange-900 text-orange-300 rounded text-xs">活力</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥649</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Wellness Harmony Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-purple-300 mb-1">和</div>
+                                    <div class="text-lg text-indigo-300">康諧</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">健康調和符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">心身のバランスを取り、全体的な健康を促進</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-purple-900 text-purple-300 rounded text-xs">バランス</span>
+                                <span class="px-2 py-1 bg-indigo-900 text-indigo-300 rounded text-xs">調和</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥749</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Academic & Career -->
+                <div class="mb-12 talisman-category" data-category="academic">
+                    <h4 class="text-2xl font-bold mb-8 text-blue-400 text-center">学業・仕事（5種符篆）</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Wisdom Accumulation Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-blue-300 mb-1">智</div>
+                                    <div class="text-lg text-indigo-300">慧積</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">知恵蓄積符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">学習と知識の保持を向上</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-blue-900 text-blue-300 rounded text-xs">知恵</span>
+                                <span class="px-2 py-1 bg-indigo-900 text-indigo-300 rounded text-xs">学習</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥779</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Career Acceleration Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-green-600 via-emerald-600 to-teal-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-green-300 mb-1">業</div>
+                                    <div class="text-lg text-emerald-300">途進</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">キャリア加速符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">専門的な発展と機会を促進</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-green-900 text-green-300 rounded text-xs">キャリア</span>
+                                <span class="px-2 py-1 bg-emerald-900 text-emerald-300 rounded text-xs">昇進</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥899</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Examination Success Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-yellow-600 via-amber-600 to-orange-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-yellow-300 mb-1">考</div>
+                                    <div class="text-lg text-amber-300">試成</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">試験成功符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">試験やテストのパフォーマンスを向上</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-yellow-900 text-yellow-300 rounded text-xs">試験</span>
+                                <span class="px-2 py-1 bg-amber-900 text-amber-300 rounded text-xs">成功</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥699</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Leadership Mastery Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-red-600 via-orange-600 to-amber-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-red-300 mb-1">領</div>
+                                    <div class="text-lg text-orange-300">導精</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">リーダーシップ習得符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">リーダーシップの質と影響力を向上</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-red-900 text-red-300 rounded text-xs">リーダーシップ</span>
+                                <span class="px-2 py-1 bg-orange-900 text-orange-300 rounded text-xs">影響力</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥969</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Wealth & Prosperity -->
+                <div class="mb-12 talisman-category" data-category="wealth">
+                    <h4 class="text-2xl font-bold mb-8 text-yellow-400 text-center">財運・繁栄（10種符篆）</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Five Paths Wealth God Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-yellow-600 via-amber-600 to-orange-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-yellow-300 mb-1">財</div>
+                                    <div class="text-lg text-amber-300">五路</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">五路財神符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">四方八方から富を引き寄せる</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-yellow-900 text-yellow-300 rounded text-xs">財運</span>
+                                <span class="px-2 py-1 bg-amber-900 text-amber-300 rounded text-xs">繁栄</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥799</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Business Success Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-green-600 via-emerald-600 to-teal-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-green-300 mb-1">商</div>
+                                    <div class="text-lg text-emerald-300">業成</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">事業成功符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">ビジネスチャンスと成長を促進</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-green-900 text-green-300 rounded text-xs">事業</span>
+                                <span class="px-2 py-1 bg-emerald-900 text-emerald-300 rounded text-xs">成功</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥969</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Golden Opportunity Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-amber-600 via-orange-600 to-red-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-amber-300 mb-1">機</div>
+                                    <div class="text-lg text-orange-300">金遇</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">黄金機会符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">収益性の高い機会を引き寄せる</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-amber-900 text-amber-300 rounded text-xs">機会</span>
+                                <span class="px-2 py-1 bg-orange-900 text-orange-300 rounded text-xs">財運</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥899</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Abundance Flow Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-purple-300 mb-1">豐</div>
+                                    <div class="text-lg text-indigo-300">流裕</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">豊かさの流れ符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">継続的な豊かさの流れを確保</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-purple-900 text-purple-300 rounded text-xs">豊かさ</span>
+                                <span class="px-2 py-1 bg-indigo-900 text-indigo-300 rounded text-xs">流れ</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥779</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Love & Relationships -->
+                <div class="mb-12 talisman-category" data-category="love">
+                    <h4 class="text-2xl font-bold mb-8 text-pink-400 text-center">恋愛・人間関係（10種符篆）</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Twin Flame Harmony Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-pink-600 via-rose-600 to-fuchsia-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-pink-300 mb-1">愛</div>
+                                    <div class="text-lg text-rose-300">雙諧</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">ツインフレーム調和符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">ソウルメイト関係を引き寄せ調和させる</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-pink-900 text-pink-300 rounded text-xs">愛情</span>
+                                <span class="px-2 py-1 bg-rose-900 text-rose-300 rounded text-xs">調和</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥779</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Marriage Blessing Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-red-600 via-pink-600 to-purple-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-red-300 mb-1">婚</div>
+                                    <div class="text-lg text-pink-300">福誓</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">結婚祝福符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">夫婦の絆とコミットメントを強化</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-red-900 text-red-300 rounded text-xs">結婚</span>
+                                <span class="px-2 py-1 bg-pink-900 text-pink-300 rounded text-xs">祝福</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥839</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Family Harmony Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-orange-600 via-amber-600 to-yellow-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-orange-300 mb-1">家</div>
+                                    <div class="text-lg text-amber-300">和諧</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">家族調和符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">家族の平和と理解を促進</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-orange-900 text-orange-300 rounded text-xs">家族</span>
+                                <span class="px-2 py-1 bg-amber-900 text-amber-300 rounded text-xs">調和</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥699</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Friendship Bond Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-cyan-600 to-teal-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-blue-300 mb-1">友</div>
+                                    <div class="text-lg text-cyan-300">誼堅</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">友情の絆符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">真の友情を強化し引き寄せる</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-blue-900 text-blue-300 rounded text-xs">友情</span>
+                                <span class="px-2 py-1 bg-cyan-900 text-cyan-300 rounded text-xs">絆</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥649</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Protection & Safety -->
+                <div class="mb-12 talisman-category" data-category="protection">
+                    <h4 class="text-2xl font-bold mb-8 text-blue-400 text-center">守護・安全（15種符篆）</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Peace Guardian Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-cyan-600 to-sky-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-blue-300 mb-1">護</div>
+                                    <div class="text-lg text-cyan-300">平安</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">平安守護符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">旅行と日常生活の安全を確保</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-blue-900 text-blue-300 rounded text-xs">安全</span>
+                                <span class="px-2 py-1 bg-cyan-900 text-cyan-300 rounded text-xs">旅行</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥629</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Evil Ward Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-red-600 via-orange-600 to-amber-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-red-300 mb-1">鎮</div>
+                                    <div class="text-lg text-orange-300">宅邪</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">悪霊退散符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">家を負のエネルギーから守る</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-red-900 text-red-300 rounded text-xs">守護</span>
+                                <span class="px-2 py-1 bg-orange-900 text-orange-300 rounded text-xs">家庭</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥929</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Business Protection Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-gray-600 via-slate-600 to-stone-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-gray-300 mb-1">業</div>
+                                    <div class="text-lg text-slate-300">護商</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">事業守護符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">企業を金銭的損失と紛争から守る</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-gray-900 text-gray-300 rounded text-xs">事業</span>
+                                <span class="px-2 py-1 bg-slate-900 text-slate-300 rounded text-xs">守護</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥1,079</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Spiritual Shield Talisman -->
+                        <div class="talisman-card">
+                            <div class="talisman-image">
+                                <div class="absolute inset-0 bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-600 opacity-80"></div>
+                                <div class="relative z-10">
+                                    <div class="text-4xl text-violet-300 mb-1">靈</div>
+                                    <div class="text-lg text-purple-300">護盾</div>
+                                </div>
+                            </div>
+                            <h5 class="font-bold text-lg mb-2">霊的防御符篆</h5>
+                            <p class="text-sm text-gray-400 mb-3">負の影響に対する霊的バリアを作る</p>
+                            <div class="flex justify-center space-x-1">
+                                <span class="px-2 py-1 bg-violet-900 text-violet-300 rounded text-xs">霊的</span>
+                                <span class="px-2 py-1 bg-purple-900 text-purple-300 rounded text-xs">防御</span>
+                            </div>
+                            <div class="mt-4">
+                                <span class="text-yellow-400 font-bold">¥819</span>
+                                <button class="btn-primary px-4 py-1 rounded-full text-xs ml-2">カスタマイズ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Family Energy Enhancement Series -->
+            <div class="talisman-showcase mb-16">
+                <h3 class="text-3xl font-bold mb-8 gradient-text text-center">家族エネルギー向上シリーズ（20種符篆）</h3>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <!-- Home Harmony -->
+                    <div>
+                        <h4 class="text-2xl font-bold mb-6 text-pink-400 text-center">家族調和（10種符篆）</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-center bg-gray-800 bg-opacity-50 rounded-lg p-4">
+                                <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-pink-600 to-red-600 flex items-center justify-center mr-4">
+                                    <span class="text-xl text-white">家</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold">家族調和符篆</h5>
+                                    <p class="text-sm text-gray-400 mb-3">家族内の平和と団結を促進</p>
+                                    <div class="mt-1">
+                                        <span class="text-yellow-400 font-bold">¥999</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center bg-gray-800 bg-opacity-50 rounded-lg p-4">
+                                <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-green-600 to-blue-600 flex items-center justify-center mr-4">
+                                    <span class="text-xl text-white">親</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold">親子の絆符篆</h5>
+                                    <p class="text-sm text-gray-400 mb-3">世代間の関係を強化</p>
+                                    <div class="mt-1">
+                                        <span class="text-yellow-400 font-bold">¥869</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center bg-gray-800 bg-opacity-50 rounded-lg p-4">
+                                <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center mr-4">
+                                    <span class="text-xl text-white">兄</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold">兄弟姉妹団結符篆</h5>
+                                    <p class="text-sm text-gray-400 mb-3">兄弟姉妹間の調和を促進</p>
+                                    <div class="mt-1">
+                                        <span class="text-yellow-400 font-bold">¥699</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Home Feng Shui -->
+                    <div>
+                        <h4 class="text-2xl font-bold mb-6 text-orange-400 text-center">住宅風水（10種符篆）</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-center bg-gray-800 bg-opacity-50 rounded-lg p-4">
+                                <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-orange-600 to-red-600 flex items-center justify-center mr-4">
+                                    <span class="text-xl text-white">全</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold">全屋調和符篆</h5>
+                                    <p class="text-sm text-gray-400 mb-3">家全体のエネルギーバランスを調整</p>
+                                    <div class="mt-1">
+                                        <span class="text-yellow-400 font-bold">¥1,279</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center bg-gray-800 bg-opacity-50 rounded-lg p-4">
+                                <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-yellow-600 to-orange-600 flex items-center justify-center mr-4">
+                                    <span class="text-xl text-white">財</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold">財位活性化装置</h5>
+                                    <p class="text-sm text-gray-400 mb-3">家の財運エリアを活性化</p>
+                                    <div class="mt-1">
+                                        <span class="text-yellow-400 font-bold">¥929</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center bg-gray-800 bg-opacity-50 rounded-lg p-4">
+                                <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center mr-4">
+                                    <span class="text-xl text-white">文</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold">書斎強化装置</h5>
+                                    <p class="text-sm text-gray-400 mb-3">集中力と学習能力を向上</p>
+                                    <div class="mt-1">
+                                        <span class="text-yellow-400 font-bold">¥839</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Clan Protection Series -->
+            <div class="talisman-showcase">
+                <h3 class="text-3xl font-bold mb-8 gradient-text text-center">一族守護シリーズ（15種符篆）</h3>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Ancestral Protection -->
+                    <div>
+                        <h4 class="text-xl font-bold mb-6 text-purple-400 text-center">先祖の祝福（5種符篆）</h4>
+                        <div class="space-y-3">
+                            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 text-center">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-violet-600 flex items-center justify-center mx-auto mb-2">
+                                    <span class="text-lg text-white">祖</span>
+                                </div>
+                                <h6 class="font-bold text-sm">先祖祝福符篆</h6>
+                                <p class="text-xs text-gray-400">子孫への先祖からの守護</p>
+                                <div class="mt-2">
+                                    <span class="text-yellow-400 font-bold text-sm">¥1,059</span>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 text-center">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mx-auto mb-2">
+                                    <span class="text-lg text-white">血</span>
+                                </div>
+                                <h6 class="font-bold text-sm">血統継承符篆</h6>
+                                <p class="text-xs text-gray-400">家系の継続を確保</p>
+                                <div class="mt-2">
+                                    <span class="text-yellow-400 font-bold text-sm">¥1,139</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Clan Unity -->
+                    <div>
+                        <h4 class="text-xl font-bold mb-6 text-orange-400 text-center">一族団結（5種符篆）</h4>
+                        <div class="space-y-3">
+                            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 text-center">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-orange-600 to-red-600 flex items-center justify-center mx-auto mb-2">
+                                    <span class="text-lg text-white">族</span>
+                                </div>
+                                <h6 class="font-bold text-sm">一族団結符篆</h6>
+                                <p class="text-xs text-gray-400">家族の結束を強化</p>
+                                <div class="mt-2">
+                                    <span class="text-yellow-400 font-bold text-sm">¥999</span>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 text-center">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-600 to-orange-600 flex items-center justify-center mx-auto mb-2">
+                                    <span class="text-lg text-white">源</span>
+                                </div>
+                                <h6 class="font-bold text-sm">共通ルーツ符篆</h6>
+                                <p class="text-xs text-gray-400">家族メンバーを共通のルーツに結びつける</p>
+                                <div class="mt-2">
+                                    <span class="text-yellow-400 font-bold text-sm">¥929</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Generational Protection -->
+                    <div>
+                        <h4 class="text-xl font-bold mb-6 text-green-400 text-center">世代守護（5種符篆）</h4>
+                        <div class="space-y-3">
+                            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 text-center">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-600 to-emerald-600 flex items-center justify-center mx-auto mb-2">
+                                    <span class="text-lg text-white">後</span>
+                                </div>
+                                <h6 class="font-bold text-sm">子孫繁栄符篆</h6>
+                                <p class="text-xs text-gray-400">将来の世代の繁栄を確保</p>
+                                <div class="mt-2">
+                                    <span class="text-yellow-400 font-bold text-sm">¥1,279</span>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 text-center">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-teal-600 to-cyan-600 flex items-center justify-center mx-auto mb-2">
+                                    <span class="text-lg text-white">福</span>
+                                </div>
+                                <h6 class="font-bold text-sm">世代祝福符篆</h6>
+                                <p class="text-xs text-gray-400">世代を通じて祝福を伝える</p>
+                                <div class="mt-2">
+                                    <span class="text-yellow-400 font-bold text-sm">¥1,139</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Advantages -->
+    <section class="py-20 bg-gray-900 bg-opacity-50" id="advantages">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 section-title center">核心的優位性</h2>
+                <p class="text-xl text-gray-300 max-w-4xl mx-auto">
+                    EastForgeは比類のない開運体験を提供し、独自の技術革新、文化遺産、品質保証を備えています
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Technical Innovation -->
+                <div class="advantage-card">
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 rounded-full mystic-gradient flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-microchip text-3xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold gradient-text">AI最適化</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-white mb-1">世界初のAI駆動システム</h4>
+                                <p class="text-sm text-gray-400">AI技術が伝統的な符篆作成を最適化</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-white mb-1">250万以上の素材組み合わせ</h4>
+                                <p class="text-sm text-gray-400">ビッグデータ分析で最適な素材マッチングを発見</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-white mb-1">個人エネルギープロファイル</h4>
+                                <p class="text-sm text-gray-400">個人データに基づく精密なマッチング</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Cultural Heritage -->
+                <div class="advantage-card">
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 rounded-full mystic-gradient flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-yin-yang text-3xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold gradient-text">正統な伝承</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-white mb-1">5000年の道教伝統</h4>
+                                <p class="text-sm text-gray-400">古代の方法に従い、文化の真髄を尊重</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-white mb-1">85種の古典符篆</h4>
+                                <p class="text-sm text-gray-400">すべての開運ニーズをカバー</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-white mb-1">ワン師の指導</h4>
+                                <p class="text-sm text-gray-400">文化的な真正性を確保</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Premium Quality -->
+                <div class="advantage-card">
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 rounded-full mystic-gradient flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-gem text-3xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold gradient-text">プレミアム品質</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-white mb-1">500以上の天然素材</h4>
+                                <p class="text-sm text-gray-400">厳選された朱砂、金粉、桃木</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-white mb-1">厳格な品質管理</h4>
+                                <p class="text-sm text-gray-400">各符篆は複数回の検査を受ける</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-white mb-1">吉時開光</h4>
+                                <p class="text-sm text-gray-400">天文暦に基づいて最適なタイミングを選択</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Service Experience -->
+                <div class="advantage-card">
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 rounded-full mystic-gradient flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-headset text-3xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold gradient-text">プレミアムサービス</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-white mb-1">プライベート相談</h4>
+                                <p class="text-sm text-gray-400">専門家による1対1の指導</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-white mb-1">グローバル配送</h4>
+                                <p class="text-sm text-gray-400">安全で信頼できる世界配送</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-white mb-1">アフターサービス</h4>
+                                <p class="text-sm text-gray-400">最適な結果のための継続的指導</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Effectiveness -->
+                <div class="advantage-card">
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 rounded-full mystic-gradient flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-chart-line text-3xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold gradient-text">顕著な効果</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-white mb-1">97.3%の満足度</h4>
+                                <p class="text-sm text-gray-400">実際のお客様フィードバックに基づく</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-white mb-1">2000以上の成功事例</h4>
+                                <p class="text-sm text-gray-400">文書化された成果</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-white mb-1">30日間保証</h4>
+                                <p class="text-sm text-gray-400">結果に満足できない場合は無料でリメイク</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Technology Integration -->
+                <div class="advantage-card">
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 rounded-full mystic-gradient flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-robot text-3xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold gradient-text">技術統合</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-white mb-1">ブロックチェーン認証</h4>
+                                <p class="text-sm text-gray-400">透明な製造プロセス追跡</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-white mb-1">エネルギー場監視</h4>
+                                <p class="text-sm text-gray-400">リアルタイムエネルギー署名追跡</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-white mb-1">量子共鳴技術</h4>
+                                <p class="text-sm text-gray-400">強化されたエネルギー調整技術</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- User Testimonials -->
+    <section class="py-20" id="testimonials">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 section-title center">お客様成功事例</h2>
+                <p class="text-xl text-gray-300 max-w-4xl mx-auto">
+                    尊敬するお客様が体験した真の変革
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="card p-6 testimonial-card">
+                    <div class="flex items-center mb-4">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-r from-red-600 to-yellow-600 flex items-center justify-center text-xl mr-4 text-white font-bold">
+                            田
+                        </div>
+                        <div>
+                            <h4 class="font-bold">田中様 | IT企業CEO</h4>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4">
+                        「キャリア加速符篆を使用してから、2ヶ月で3つの大型契約を獲得しました。AI最適化は本当に機能します - 売上が40%増加しました！」
+                    </p>
+                    <div class="text-sm text-red-400">#キャリア成功 #事業成長</div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="card p-6 testimonial-card">
+                    <div class="flex items-center mb-4">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 flex items-center justify-center text-xl mr-4 text-white font-bold">
+                            佐
+                        </div>
+                        <div>
+                            <h4 class="font-bold">佐藤様 | 不動産業</h4>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4">
+                        「財神符篆がビジネスを変革しました。活性化後の最初の四半期で、2,000万円相当の取引を成約しました。エネルギーが信じられません！」
+                    </p>
+                    <div class="text-sm text-red-400">#財運 #不動産</div>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="card p-6 testimonial-card">
+                    <div class="flex items-center mb-4">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-r from-green-600 to-blue-600 flex items-center justify-center text-xl mr-4 text-white font-bold">
+                            鈴
+                        </div>
+                        <div>
+                            <h4 class="font-bold">鈴木様 | 投資家</h4>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4">
+                        「EastForgeの推奨を実施してから、投資ポートフォリオが6ヶ月で65%成長しました。五路財神符篆は投資した価値がありました！」
+                    </p>
+                    <div class="text-sm text-red-400">#投資 #財産成長</div>
+                </div>
+                
+                <!-- Testimonial 4 -->
+                <div class="card p-6 testimonial-card">
+                    <div class="flex items-center mb-4">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 flex items-center justify-center text-xl mr-4 text-white font-bold">
+                            山
+                        </div>
+                        <div>
+                            <h4 class="font-bold">山田医師 | 医師</h4>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4">
+                        「学業成功符篆で専門試験に合格しました。集中力と記憶力が大幅に向上しました。同僚全員にEastForgeをお勧めします！」
+                    </p>
+                    <div class="text-sm text-red-400">#学業 #集中力</div>
+                </div>
+                
+                <!-- Testimonial 5 -->
+                <div class="card p-6 testimonial-card">
+                    <div class="flex items-center mb-4">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-r from-orange-600 to-red-600 flex items-center justify-center text-xl mr-4 text-white font-bold">
+                            高
+                        </div>
+                        <div>
+                            <h4 class="font-bold">高橋様 | レストラン経営者</h4>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4">
+                        「事業守護符篆を設置してから、家族経営が3倍になりました。客足が増え、争いがなくなりました。本当に素晴らしいです！」
+                    </p>
+                    <div class="text-sm text-red-400">#家族経営 #成功</div>
+                </div>
+                
+                <!-- Testimonial 6 -->
+                <div class="card p-6 testimonial-card">
+                    <div class="flex items-center mb-4">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 flex items-center justify-center text-xl mr-4 text-white font-bold">
+                            中
+                        </div>
+                        <div>
+                            <h4 class="font-bold">中村様 | デザイナー</h4>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4">
+                        「家族調和符篆が我が家を変えました。長年の緊張の後、ついに平和にコミュニケーションできるようになりました。子供たちの成績も向上しました！」
+                    </p>
+                    <div class="text-sm text-red-400">#家族調和 #平和</div>
+                </div>
+            </div>
+            
+            <!-- Statistics -->
+            <div class="mt-16 bg-gray-800 bg-opacity-50 rounded-2xl p-8">
+                <h3 class="text-2xl font-bold mb-8 text-center gradient-text">お客様満足度指標</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-green-400 mb-2">97.3%</div>
+                        <div class="text-gray-400">総合満足度</div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-blue-400 mb-2">94.8%</div>
+                        <div class="text-gray-400">推奨意向</div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-purple-400 mb-2">91.5%</div>
+                        <div class="text-gray-400">著しい効果報告</div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-yellow-400 mb-2">96.2%</div>
+                        <div class="text-gray-400">リピートカスタマー</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-20 bg-gradient-to-r from-red-900 via-yellow-900 to-red-900">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-5xl font-bold mb-6">
+                あなたの<span class="gradient-text">開運の旅</span>を始めましょう
+            </h2>
+            <p class="text-xl text-gray-300 max-w-3xl mx-auto mb-10">
+                EastForge AI最適化システムを通じて人生の運気を向上させた何千人もの成功者たちに参加してください。今すぐパーソナライズ相談を開始しましょう。
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-8">
+                <button class="btn-primary px-10 py-4 rounded-full text-lg font-semibold">
+                    <i class="fas fa-calendar-check mr-2"></i>
+                    相談開始
+                </button>
+                <button class="btn-secondary px-10 py-4 rounded-full text-lg font-semibold">
+                    <i class="fas fa-phone mr-2"></i>
+                    専門家に連絡
+                </button>
+            </div>
+            
+            <!-- Contact Information -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                <div class="bg-black bg-opacity-30 rounded-lg p-6">
+                    <i class="fas fa-envelope text-2xl text-yellow-400 mb-3"></i>
+                    <h4 class="font-bold mb-2">メール</h4>
+                    <p class="text-gray-300">contact@eastforge.me</p>
+                    <p class="text-sm text-gray-400">専門チームが迅速に対応</p>
+                </div>
+                
+                <div class="bg-black bg-opacity-30 rounded-lg p-6">
+                    <i class="fab fa-line text-2xl text-yellow-400 mb-3"></i>
+                    <h4 class="font-bold mb-2">LINE</h4>
+                    <p class="text-gray-300">EastForge_Japan</p>
+                    <p class="text-sm text-gray-400">QRコードをスキャンして即座に相談</p>
+                </div>
+                
+                <div class="bg-black bg-opacity-30 rounded-lg p-6">
+                    <i class="fas fa-map-marker-alt text-2xl text-yellow-400 mb-3"></i>
+                    <h4 class="font-bold mb-2">住所</h4>
+                    <p class="text-gray-300">香港九龍竹園村黄大仙道2号</p>
+                    <p class="text-sm text-gray-400">東京サテライトオフィス開設予定</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-gray-900 border-t border-gray-800">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="logo-font text-2xl mb-4">EastForge</div>
+                    <div class="logo-sub mb-4">東洋符篆</div>
+                    <p class="text-gray-400 mb-4">
+                        古代の叡智と計算精度の完璧な組み合わせ、AI最適化を通じて伝統的符篆の効果と応用を再定義。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-line text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-telegram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-discord text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">符篆サービス</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#talismans" class="text-gray-400 hover:text-red-400 transition">個人開運</a></li>
+                        <li><a href="#talismans" class="text-gray-400 hover:text-red-400 transition">家族調和</a></li>
+                        <li><a href="#talismans" class="text-gray-400 hover:text-red-400 transition">一族守護</a></li>
+                        <li><a href="#system" class="text-gray-400 hover:text-red-400 transition">AI最適化</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">符篆カテゴリー</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-red-400 transition">財運・仕事</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-red-400 transition">恋愛・結婚</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-red-400 transition">健康・安全</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-red-400 transition">学業成功</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">お問い合わせ</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2"></i>
+                            <span>香港九龍竹園村黄大仙道2号</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-2"></i>
+                            <span>contact@eastforge.me</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fab fa-line mt-1 mr-2"></i>
+                            <span>EastForge_Japan</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="mt-4">
+                        <h5 class="text-sm font-bold mb-2">決済方法</h5>
+                        <div class="flex space-x-2">
+                            <div class="w-8 h-8 bg-orange-600 rounded flex items-center justify-center">
+                                <i class="fab fa-bitcoin text-white text-sm"></i>
+                            </div>
+                            <div class="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
+                                <i class="fab fa-ethereum text-white text-sm"></i>
+                            </div>
+                            <div class="w-8 h-8 bg-green-600 rounded flex items-center justify-center">
+                                <i class="fas fa-yen-sign text-white text-sm"></i>
+                            </div>
+                            <div class="w-8 h-8 bg-red-600 rounded flex items-center justify-center">
+                                <span class="text-white text-xs">P</span>
+                            </div>
+                            <div class="w-8 h-8 bg-blue-500 rounded flex items-center justify-center">
+                                <span class="text-white text-xs">L</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-500 mb-4 md:mb-0">
+                        © 2025 EastForge 東洋符篆テクノロジー株式会社. 無断転載禁止.
+                    </p>
+                    <div class="flex space-x-6 text-sm">
+                        <a href="#" class="text-gray-400 hover:text-white transition">利用規約</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">プライバシーポリシー</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">お問い合わせ</a>
+                    </div>
+                </div>
+                
+                <!-- Disclaimer -->
+                <div class="mt-6 pt-6 border-t border-gray-800">
+                    <p class="text-xs text-gray-500 text-center leading-relaxed">
+                        免責事項：EastForgeが提供するサービスは、精神的な慰めと文化遺産の目的のみであり、投資、医療、法的助言を構成するものではありません。個人の開運効果は人によって異なり、特定の結果を保証するものではありません。符篆文化を理性的に捉え、特別なニーズについては関連専門家にご相談ください。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    document.getElementById('mobileMenu').classList.remove('active');
+                }
+            });
+        });
+        
+        // Login modal functionality
+        const loginBtn = document.getElementById('loginBtn');
+        const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+        const loginModal = document.getElementById('loginModal');
+        const closeLogin = document.getElementById('closeLogin');
+        
+        loginBtn.addEventListener('click', () => {
+            loginModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+        
+        mobileLoginBtn.addEventListener('click', () => {
+            loginModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            document.getElementById('mobileMenu').classList.remove('active');
+        });
+        
+        closeLogin.addEventListener('click', () => {
+            loginModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Mobile menu functionality
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                mobileMenu.classList.remove('active');
+            }
+        });
+        
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Page load animation
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.5s ease';
+                document.body.style.opacity = '1';
+            }, 100);
+            
+            // Category filtering
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const talismanCategories = document.querySelectorAll('.talisman-category');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    // Add active class to clicked button
+                    btn.classList.add('active');
+                    
+                    const filter = btn.getAttribute('data-filter');
+                    
+                    talismanCategories.forEach(category => {
+                        if (filter === 'all' || category.getAttribute('data-category') === filter) {
+                            category.style.display = 'block';
+                        } else {
+                            category.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Chat simulation
+            const chatMessages = document.getElementById('chatMessages');
+            const chatInput = document.getElementById('chatInput');
+            const sendMessageBtn = document.getElementById('sendMessage');
+            
+            sendMessageBtn.addEventListener('click', () => {
+                if (chatInput.value.trim() !== '') {
+                    // Add user message
+                    const userMsg = document.createElement('div');
+                    userMsg.className = 'message user-message';
+                    userMsg.innerHTML = `<strong>ユーザー</strong><br>${chatInput.value}`;
+                    chatMessages.appendChild(userMsg);
+                    
+                    // Clear input
+                    chatInput.value = '';
+                    
+                    // Scroll to bottom
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    
+                    // Simulate bot response after delay
+                    setTimeout(() => {
+                        const botMsg = document.createElement('div');
+                        botMsg.className = 'message bot-message';
+                        botMsg.innerHTML = `<strong>ワン師</strong><br>メッセージをありがとうございます。AI符篆師があなたのリクエストを分析中で、間もなくパーソナライズされた推奨をお提供いたします。`;
+                        chatMessages.appendChild(botMsg);
+                        
+                        // Scroll to bottom
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }, 1000);
+                }
+            });
+            
+            // Enter key to send message
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessageBtn.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
